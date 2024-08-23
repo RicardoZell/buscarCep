@@ -1,4 +1,4 @@
-# Buscador automático de CEP
+# Buscador automático de Cep
 Projeto em Java para sistemas desktop (Windows, Linux) que  busca automaticamente o CEP de um Web Service podendo ser usado em uma aplicação comercial para otimizar o preenchimento de cadastro de clientes, fornecedores etc.
 
 ![cep](https://github.com/professorjosedeassis/cep/blob/main/buscarCEP/src/img/buscarcep.png)
