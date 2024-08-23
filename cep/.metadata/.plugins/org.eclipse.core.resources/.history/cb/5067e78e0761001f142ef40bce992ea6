@@ -1,0 +1,10 @@
+/**
+ * 
+ */
+/**
+ * 
+ */
+module BuscadorCep {
+	requires java.desktop;
+	requires Atxy2k;
+}

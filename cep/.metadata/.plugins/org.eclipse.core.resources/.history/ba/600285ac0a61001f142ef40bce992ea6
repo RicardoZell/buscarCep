@@ -1,0 +1,185 @@
+package cep;
+
+import java.awt.Cursor;
+import java.awt.EventQueue;
+import java.awt.SystemColor;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.net.URL;
+import java.util.Iterator;
+
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JEditorPane;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.border.EmptyBorder;
+import javax.swing.text.Document;
+
+import org.dom4j.Element;
+import org.dom4j.io.SAXReader;
+
+import Atxy2k.CustomTextField.RestrictedTextField;
+
+public class Cep extends JFrame {
+
+	private static final long serialVersionUID = 1L;
+	private JPanel contentPane;
+	private JTextField txtCep;
+	private JTextField txtEndereco;
+	private JTextField txtBairro;
+	private JTextField txtCidade;
+	/**
+	 * @wbp.nonvisual location=33,596
+	 */
+	private final JEditorPane editorPane = new JEditorPane();
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					Cep frame = new Cep();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public Cep() {
+		editorPane.setToolTipText("Sobre");
+		setTitle("Buscar CEP");
+		setResizable(false);
+		setIconImage(Toolkit.getDefaultToolkit().getImage(Cep.class.getResource("/img/home.png")));
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 450, 300);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+
+		JLabel lblNewLabel = new JLabel("CEP");
+		lblNewLabel.setBounds(32, 53, 60, 17);
+		contentPane.add(lblNewLabel);
+
+		txtCep = new JTextField();
+		txtCep.setBounds(61, 51, 114, 21);
+		contentPane.add(txtCep);
+		txtCep.setColumns(10);
+
+		JLabel lblEndereo = new JLabel("Endereço");
+		lblEndereo.setBounds(32, 105, 60, 17);
+		contentPane.add(lblEndereo);
+
+		txtEndereco = new JTextField();
+		txtEndereco.setBounds(110, 103, 289, 21);
+		contentPane.add(txtEndereco);
+		txtEndereco.setColumns(10);
+
+		JLabel lblBairro = new JLabel("Bairro");
+		lblBairro.setBounds(32, 153, 60, 17);
+		contentPane.add(lblBairro);
+
+		txtBairro = new JTextField();
+		txtBairro.setBounds(110, 151, 289, 21);
+		contentPane.add(txtBairro);
+		txtBairro.setColumns(10);
+
+		JLabel lblCidade = new JLabel("Cidade");
+		lblCidade.setBounds(32, 207, 60, 17);
+		contentPane.add(lblCidade);
+
+		txtCidade = new JTextField();
+		txtCidade.setBounds(108, 205, 196, 21);
+		contentPane.add(txtCidade);
+		txtCidade.setColumns(10);
+
+		JLabel lblUf = new JLabel("UF");
+		lblUf.setBounds(322, 205, 33, 17);
+		contentPane.add(lblUf);
+
+		JComboBox cboUf = new JComboBox();
+		cboUf.setModel(new DefaultComboBoxModel(
+				new String[] { "", "AC", "AL", "AP", "AM", "BA", "CE", "DF", "ES", "GO", "MA", "MT", "MS", "MG", "PA",
+						"PB", "PR", "PE", "PI", "RJ", "RN", "RS", "RO", "RR", "SC", "SP", "SE", "TO" }));
+		cboUf.setBounds(355, 202, 44, 26);
+		contentPane.add(cboUf);
+
+		JButton btnLimpar = new JButton("Limpar");
+		btnLimpar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		btnLimpar.setBounds(32, 243, 105, 27);
+		contentPane.add(btnLimpar);
+
+		JButton btnCep = new JButton("Buscar");
+		btnCep.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (txtCep.getText().equals("")) {
+					JOptionPane.showMessageDialog(null, "Informe o CEP");
+					txtCep.requestFocus();
+				} else {
+					buscarCep();
+				}
+			}
+		});
+		btnCep.setBounds(199, 48, 105, 27);
+		contentPane.add(btnCep);
+
+		JButton btnSobre = new JButton("");
+		btnSobre.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				Sobre sobre = new Sobre();
+				sobre.setVisible(true);
+			}
+		});
+		btnSobre.setToolTipText("Sobre");
+		btnSobre.setIcon(new ImageIcon(Cep.class.getResource("/img/info.png")));
+		btnSobre.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		btnSobre.setBorder(null);
+		btnSobre.setBackground(SystemColor.control);
+		btnSobre.setBounds(322, 30, 48, 48);
+		contentPane.add(btnSobre);
+
+		RestrictedTextField validar = new RestrictedTextField(txtCep);
+		validar.setOnlyNums(true);
+		validar.setLimit(8);
+	}
+
+	private void buscarCep() {
+		String logradouro = "";
+		String tipoLogradouro = "";
+		String resultado = null;
+		String cep = txtCep.getText();
+		try {
+			URL url = new URL("http://cep.republicavirtual.com.br/web_cep.php?cep=" + cep + "&formato=xml");
+			SAXReader xml = new SAXReader();
+			Document documento = xml.read(url);
+			Element root = documento.getRootElements();
+		    for (Iterator<Element> it = root.elementIterator(); it.hasNext();) {
+		        Element element = it.next();
+		        if (element.getQualifiedName().equals("cidade")){
+		        	txtCidade.setText(element.getText());
+		    }
+		} catch (Exception e) {
+			System.out.println (e);
+		}
+	}
+
+}
+
