@@ -9,16 +9,3 @@ Projeto em Java para sistemas desktop (Windows, Linux) que  busca automaticament
 
 [download openJDK)](https://adoptium.net/)
 
-2) Em releases baixe o arquivo executável (cep.jar) 
-
-Tecnologias que são abordadas
-- IDE Eclipse
-- Java SE
-- Window Builder
-- Validação de dados
-- Uso da biblioteca dom4j para trabalhar com xml
-
-### Bibliotecas:
-[atxy2k](http://atxy2k.github.io/RestrictedTextField/)
-
-[dom4j](https://dom4j.github.io/)
