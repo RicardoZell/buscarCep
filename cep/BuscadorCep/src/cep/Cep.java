@@ -199,13 +199,4 @@ public class Cep extends JFrame {
 		}
 	}
 
-	private void limpar() {
-		txtCep.setText(null);
-		txtEndereco.setText(null);
-		txtBairro.setText(null);
-		txtCidade.setText(null);
-		cboUf.setSelectedItem(null);
-		txtCep.requestFocus();
-		lblStatus.setIcon(null);
-	}
-}
+
